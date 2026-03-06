@@ -387,6 +387,25 @@
     </div>
   </section>
 
+  <!-- NEWSLETTER + VIRAL SHARE -->
+  <section>
+    <div style="background:linear-gradient(135deg,rgba(255,110,180,.08),rgba(191,90,242,.06));border:1px solid rgba(255,110,180,.25);border-radius:16px;padding:32px;text-align:center;">
+      <div style="font-size:2rem;margin-bottom:8px;">💌</div>
+      <h2 style="font-size:1.4rem;font-weight:800;margin-bottom:6px;">Join 3,200+ Parents</h2>
+      <p style="color:var(--muted);font-size:.9rem;margin-bottom:16px;">Weekly baby product deals, safety recalls &amp; new parent tips — free.</p>
+      <div style="display:flex;gap:8px;max-width:400px;margin:0 auto 12px;flex-wrap:wrap;" id="baby-nl-form">
+        <input id="baby-nl-email" type="email" placeholder="your@email.com" style="flex:1;min-width:180px;background:var(--card);border:1px solid var(--border);color:var(--text);padding:10px 14px;border-radius:10px;font-size:.88rem;font-family:inherit;">
+        <button onclick="subscribeBabyNL()" style="background:linear-gradient(135deg,var(--pink),var(--purple));color:#fff;border:none;padding:10px 20px;border-radius:10px;font-weight:800;font-size:.88rem;cursor:pointer;white-space:nowrap;">Join Free</button>
+      </div>
+      <div id="baby-nl-msg" style="font-size:.82rem;color:var(--pink);min-height:18px;font-weight:700;"></div>
+      <p style="color:var(--muted);font-size:.72rem;margin-top:8px;">No spam. Unsubscribe anytime.</p>
+      <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--border);">
+        <p style="color:var(--muted);font-size:.85rem;margin-bottom:8px;">Love spunk.baby? Share it with other parents →</p>
+        <button onclick="shareBabyOnX()" style="background:#000;color:#fff;border:1px solid #333;padding:9px 20px;border-radius:20px;font-weight:700;font-size:.85rem;cursor:pointer;">𝕏 Share on X</button>
+      </div>
+    </div>
+  </section>
+
   <!-- SpunkArt Empire -->
   <section>
     <div class="section-header">
@@ -439,6 +458,23 @@
   function daily(){fetch(DB+'/hits/'+site+'/'+new Date().toISOString().slice(0,10)+'.json',{method:'POST',body:JSON.stringify({t:Date.now()})}).catch(function(){});}
   ping();refresh();daily();setInterval(function(){ping();refresh();},10000);
 })();
+// Newsletter
+window.subscribeBabyNL=function(){
+  var email=document.getElementById('baby-nl-email').value.trim();
+  var msg=document.getElementById('baby-nl-msg');
+  if(!email||!email.includes('@')){if(msg)msg.textContent='Please enter a valid email.';return;}
+  var fp=localStorage.getItem('baby_fp')||('fp_'+Math.random().toString(36).slice(2));
+  localStorage.setItem('baby_fp',fp);
+  if(localStorage.getItem('baby_nl_sub')){if(msg)msg.textContent='You\'re already subscribed! 🎉';return;}
+  fetch('https://predict-network-ec767-default-rtdb.firebaseio.com/spunk_baby_newsletter/'+fp+'.json',{method:'PUT',body:JSON.stringify({email:email,t:Date.now()}),headers:{'Content-Type':'application/json'}}).catch(function(){});
+  localStorage.setItem('baby_nl_sub','1');
+  if(msg)msg.textContent='🎉 You\'re in! Weekly baby deals incoming.';
+  document.getElementById('baby-nl-email').value='';
+};
+// X Share
+window.shareBabyOnX=function(){
+  window.open('https://twitter.com/intent/tweet?text='+encodeURIComponent('Just found the best baby product guide at spunk.baby — Amazon deals curated for new parents! 👶 via @SpunkArt13'),'_blank');
+};
 // Category Filter
 document.getElementById('catTabs').addEventListener('click',function(e){
   if(!e.target.classList.contains('cat-tab'))return;
