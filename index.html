@@ -129,12 +129,12 @@
       </div>
     </div>
     <div class="cat-tabs" id="catTabs">
-      <button class="cat-tab active" data-cat="all">All</button>
-      <button class="cat-tab" data-cat="sleep">Sleep</button>
-      <button class="cat-tab" data-cat="feeding">Feeding</button>
-      <button class="cat-tab" data-cat="travel">Travel</button>
-      <button class="cat-tab" data-cat="safety">Safety</button>
-      <button class="cat-tab" data-cat="care">Care</button>
+      <button class="cat-tab active" data-cat="all" onclick="filterCategory('all', this)">All</button>
+      <button class="cat-tab" data-cat="sleep" onclick="filterCategory('sleep', this)">Sleep</button>
+      <button class="cat-tab" data-cat="feeding" onclick="filterCategory('feeding', this)">Feeding</button>
+      <button class="cat-tab" data-cat="travel" onclick="filterCategory('travel', this)">Travel</button>
+      <button class="cat-tab" data-cat="safety" onclick="filterCategory('safety', this)">Safety</button>
+      <button class="cat-tab" data-cat="care" onclick="filterCategory('care', this)">Care</button>
     </div>
     <div class="product-grid" id="productGrid">
       <!-- Sleep -->
@@ -453,6 +453,16 @@ document.getElementById('catTabs').addEventListener('click',function(e){
 function closeTip(){document.getElementById('tipModal').classList.remove('open');}
 function copyBTC(){var a=document.getElementById('btcAddr').textContent.trim();navigator.clipboard.writeText(a).catch(function(){});document.getElementById('btcAddr').textContent='✓ Copied!';setTimeout(function(){document.getElementById('btcAddr').textContent=a;},2000);}
 document.getElementById('tipModal').addEventListener('click',function(e){if(e.target===this)closeTip();});
+
+// ─── Category filter ────────────────────────────────────────────
+window.filterCategory = function(cat, btn) {
+  document.querySelectorAll('.filter-btn, .cat-btn').forEach(function(b){ b.classList.remove('active'); });
+  if (btn) btn.classList.add('active');
+  document.querySelectorAll('[data-category],[data-cat]').forEach(function(card) {
+    var c = card.dataset.category || card.dataset.cat || '';
+    card.style.display = (cat === 'all' || c === cat || c === '') ? '' : 'none';
+  });
+};
 </script>
 </body>
 </html>
